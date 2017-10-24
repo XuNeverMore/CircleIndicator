@@ -16,6 +16,7 @@
         <item name="colorSelected">#4caf65</item>
         <item name="circleRadius">5dp</item>
         <item name="circleSpacing">15dp</item>
+        <item name="snapEnable">false</item>
     </style>
 
 </resources>

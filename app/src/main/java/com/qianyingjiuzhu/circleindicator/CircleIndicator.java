@@ -30,23 +30,27 @@ public class CircleIndicator extends View implements ViewPager.OnPageChangeListe
 
     private int colorNormal = 0xff999999;
     private int colorSelected = 0xff4caf65;
+    private boolean snapEnable;
+
     public CircleIndicator(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public CircleIndicator(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public CircleIndicator(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleIndicator, R.attr.cStyle, 0);
 
-        mRadius = typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_circleRadius,5);
-        mSpacing = typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_circleSpacing,15);
+        mRadius = typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_circleRadius, 5);
+        mSpacing = typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_circleSpacing, 15);
 
-        colorNormal = typedArray.getColor(R.styleable.CircleIndicator_colorNormal,colorNormal);
-        colorSelected = typedArray.getColor(R.styleable.CircleIndicator_colorSelected,colorSelected);
+        colorNormal = typedArray.getColor(R.styleable.CircleIndicator_colorNormal, colorNormal);
+        colorSelected = typedArray.getColor(R.styleable.CircleIndicator_colorSelected, colorSelected);
+
+        snapEnable = typedArray.getBoolean(R.styleable.CircleIndicator_snapEnable, true);
 
         typedArray.recycle();
         init();
@@ -95,13 +99,19 @@ public class CircleIndicator extends View implements ViewPager.OnPageChangeListe
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        mCurrentPoi = position;
-        mPositionOffset = positionOffset;
-        invalidate();
+        if (snapEnable) {
+            mCurrentPoi = position;
+            mPositionOffset = positionOffset;
+            invalidate();
+        }
     }
 
     @Override
     public void onPageSelected(int position) {
+        if (!snapEnable) {
+            mCurrentPoi = position;
+            invalidate();
+        }
     }
 
     @Override
@@ -115,16 +125,16 @@ public class CircleIndicator extends View implements ViewPager.OnPageChangeListe
         super.onDraw(canvas);
         if (count != 0) {
             for (int i = 0; i < count; i++) {
-                drawCircle(canvas,i,0,colorNormal);
+                drawCircle(canvas, i, 0, colorNormal);
             }
 
-            drawCircle(canvas,mCurrentPoi,mPositionOffset,colorSelected);
+            drawCircle(canvas, mCurrentPoi, mPositionOffset, colorSelected);
         }
     }
 
     private void drawCircle(Canvas canvas, int position, float positionOffset, @ColorInt int color) {
         float x = (int) (mRadius + position * mSpacing + positionOffset * mSpacing);
         mPaint.setColor(color);
-        canvas.drawCircle(x,mRadius,mRadius,mPaint);
+        canvas.drawCircle(x, mRadius, mRadius, mPaint);
     }
 }
