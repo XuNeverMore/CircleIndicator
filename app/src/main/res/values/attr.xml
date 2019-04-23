@@ -6,6 +6,7 @@
         <attr name="circleRadius" format="dimension"/>
         <attr name="circleSpacing" format="dimension"/>
         <attr name="circleIndicatorStyle" format="reference"/>
+        <attr name="circle_indicator_radius_select" format="dimension"/>
         <attr name="snapEnable" format="boolean"/>
     </declare-styleable>
 

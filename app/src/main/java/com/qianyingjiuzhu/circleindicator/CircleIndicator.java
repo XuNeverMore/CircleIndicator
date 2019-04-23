@@ -4,12 +4,13 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
+
+
 
 /**
  * @author XuNeverMore
@@ -31,6 +32,8 @@ public class CircleIndicator extends View implements ViewPager.OnPageChangeListe
     private int colorNormal = 0xff999999;
     private int colorSelected = 0xff4caf65;
     private boolean snapEnable;
+    private int mRadiusSelected;
+    private int mMaxRadius;
 
     public CircleIndicator(Context context) {
         this(context, null);
@@ -45,6 +48,7 @@ public class CircleIndicator extends View implements ViewPager.OnPageChangeListe
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleIndicator, R.attr.cStyle, 0);
 
         mRadius = typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_circleRadius, 5);
+        mRadiusSelected = typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_circle_indicator_radius_select, 5);
         mSpacing = typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_circleSpacing, 15);
 
         colorNormal = typedArray.getColor(R.styleable.CircleIndicator_colorNormal, colorNormal);
@@ -83,15 +87,16 @@ public class CircleIndicator extends View implements ViewPager.OnPageChangeListe
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (mViewPager != null) {
-
             PagerAdapter adapter = mViewPager.getAdapter();
+            if (adapter == null) {
+                return;
+            }
             count = adapter.getCount();
-            int height = mRadius * 2;
-            int width = mRadius * 2 + mSpacing * (count - 1);
+            mMaxRadius = Math.max(mRadius, mRadiusSelected);
+            int height = mMaxRadius * 2;
+            int width = mMaxRadius * 2 + mSpacing * (count - 1);
             setMeasuredDimension(width, height);
-
         }
-
 
     }
 
@@ -125,16 +130,16 @@ public class CircleIndicator extends View implements ViewPager.OnPageChangeListe
         super.onDraw(canvas);
         if (count != 0) {
             for (int i = 0; i < count; i++) {
-                drawCircle(canvas, i, 0, colorNormal);
+                drawCircle(canvas, i, 0, true);
             }
-
-            drawCircle(canvas, mCurrentPoi, mPositionOffset, colorSelected);
+            drawCircle(canvas, mCurrentPoi, mPositionOffset, false);
         }
     }
 
-    private void drawCircle(Canvas canvas, int position, float positionOffset, @ColorInt int color) {
-        float x = (int) (mRadius + position * mSpacing + positionOffset * mSpacing);
-        mPaint.setColor(color);
-        canvas.drawCircle(x, mRadius, mRadius, mPaint);
+    private void drawCircle(Canvas canvas, int position, float positionOffset, boolean isNormal) {
+        float cx = (int) (mMaxRadius + position * mSpacing + positionOffset * mSpacing);
+        mPaint.setColor(isNormal ? colorNormal : colorSelected);
+        float cy = getMeasuredHeight() / 2f;
+        canvas.drawCircle(cx, cy, isNormal ? mRadius : mRadiusSelected, mPaint);
     }
 }

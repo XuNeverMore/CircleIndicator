@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        circleIndicator = (CircleIndicator) findViewById(R.id.circle_indicator);
+        mViewPager = findViewById(R.id.view_pager);
+        circleIndicator = findViewById(R.id.circle_indicator);
 
         ColorAdapter colorAdapter = new ColorAdapter(5);
         mViewPager.setAdapter(colorAdapter);

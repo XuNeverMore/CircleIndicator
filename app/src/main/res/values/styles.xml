@@ -13,9 +13,10 @@
 
     <style name="myCstyle">
         <item name="colorNormal">#f3f3f3</item>
+        <item name="circle_indicator_radius_select">4dp</item>
         <item name="colorSelected">#4caf65</item>
-        <item name="circleRadius">5dp</item>
-        <item name="circleSpacing">15dp</item>
+        <item name="circleRadius">3dp</item>
+        <item name="circleSpacing">20dp</item>
         <item name="snapEnable">false</item>
     </style>
 
